@@ -1,0 +1,18 @@
+# MUSE診断サーバー用 Render Blueprint
+# 使い方: この server/ フォルダの中身をGitHubリポジトリのルートに置き、
+# Renderで New → Blueprint を選んでこのリポジトリを指定する。
+# GEMINI_API_KEY はRenderのダッシュボードで設定する（このファイルには書かない）。
+services:
+  - type: web
+    name: muse-diagnosis
+    runtime: python
+    plan: free
+    region: singapore
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 server.py
+    healthCheckPath: /health
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: RATE_PER_HOUR
+        value: "10"
