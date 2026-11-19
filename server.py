@@ -73,8 +73,11 @@ def call_gemini(parts):
         if env_key:
             req.add_header("x-goog-api-key", env_key)
         else:
-            sys.path.insert(0, "/opt/muse/skills/custom-connector-setup/bin")
-            from dynamic_credentials import add_surrogate_to_request
+            try:
+                sys.path.insert(0, "/opt/muse/skills/custom-connector-setup/bin")
+                from dynamic_credentials import add_surrogate_to_request
+            except ImportError:
+                raise RuntimeError("GEMINI_API_KEY is not set on the server")
             add_surrogate_to_request(req, "custom.gemini", allowed_hosts=[GEMINI_HOST])
         try:
             with urllib.request.urlopen(req, timeout=90) as resp:
